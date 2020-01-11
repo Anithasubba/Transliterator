@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" href="img/Translate1.png">
+	<meta name="author" content="codepixer">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta charset="UTF-8">
+	<title>Translate</title>
+
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,500,600" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500i" rel="stylesheet">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css">
+	<link rel="stylesheet" href="css/linearicons.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/magnific-popup.css">
+	<link rel="stylesheet" href="css/nice-select.css">
+	<link rel="stylesheet" href="css/animate.min.css">
+	<link rel="stylesheet" href="css/owl.carousel.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="https://www.google.com/jsapi">
+    </script>
+    <script type="text/javascript">
+
+      // Load the Transliterate API
+      google.load("elements", "1", {
+            packages: "transliteration"
+          });
+
+      var transliterationControl;
+      function onLoad() {
+        var options = {
+            sourceLanguage: 'en',
+            destinationLanguage: ['ar','hi','kn','ml','ta','te'],
+            transliterationEnabled: true,
+            shortcutKey: 'ctrl+g'
+        };
+        // Create an instance on TransliterationControl with the required
+        // options.
+        transliterationControl =
+          new google.elements.transliteration.TransliterationControl(options);
+
+        // Enable transliteration in the textfields with the given ids.
+        var ids = ["transl2" ];
+        transliterationControl.makeTransliteratable(ids);
+
+        // Add the STATE_CHANGED event handler to correcly maintain the state
+        // of the checkbox.
+        transliterationControl.addEventListener(
+            google.elements.transliteration.TransliterationControl.EventType.STATE_CHANGED,
+            transliterateStateChangeHandler);
+
+        // Add the SERVER_UNREACHABLE event handler to display an error message
+        // if unable to reach the server.
+        transliterationControl.addEventListener(
+            google.elements.transliteration.TransliterationControl.EventType.SERVER_UNREACHABLE,
+            serverUnreachableHandler);
+
+        // Add the SERVER_REACHABLE event handler to remove the error message
+        // once the server becomes reachable.
+        transliterationControl.addEventListener(
+            google.elements.transliteration.TransliterationControl.EventType.SERVER_REACHABLE,
+            serverReachableHandler);
+
+        // Set the checkbox to the correct state.
+        document.getElementById('checkboxId').checked =
+          transliterationControl.isTransliterationEnabled();
+
+        // Populate the language dropdown
+        var destinationLanguage =
+          transliterationControl.getLanguagePair().destinationLanguage;
+        var languageSelect = document.getElementById('languageDropDown');
+        var supportedDestinationLanguages =
+          google.elements.transliteration.getDestinationLanguages(
+            google.elements.transliteration.LanguageCode.ENGLISH);
+        for (var lang in supportedDestinationLanguages) {
+          var opt = document.createElement('option');
+          opt.text = lang;
+          opt.value = supportedDestinationLanguages[lang];
+          if (destinationLanguage == opt.value) {
+            opt.selected = true;
+          }
+          try {
+            languageSelect.add(opt, null);
+          } catch (ex) {
+            languageSelect.add(opt);
+          }
+        }
+      }
+
+      // Handler for STATE_CHANGED event which makes sure checkbox status
+      // reflects the transliteration enabled or disabled status.
+      function transliterateStateChangeHandler(e) {
+        document.getElementById('checkboxId').checked = e.transliterationEnabled;
+      }
+
+      // Handler for checkbox's click event.  Calls toggleTransliteration to toggle
+      // the transliteration state.
+      function checkboxClickHandler() {
+        transliterationControl.toggleTransliteration();
+      }
+
+      // Handler for dropdown option change event.  Calls setLanguagePair to
+      // set the new language.
+      function languageChangeHandler() {
+        var dropdown = document.getElementById('languageDropDown');
+        transliterationControl.setLanguagePair(
+            google.elements.transliteration.LanguageCode.ENGLISH,
+            dropdown.options[dropdown.selectedIndex].value);
+      }
+
+      // SERVER_UNREACHABLE event handler which displays the error message.
+      function serverUnreachableHandler(e) {
+        document.getElementById("errorDiv").innerHTML =
+            "Transliteration Server unreachable";
+      }
+
+      // SERVER_UNREACHABLE event handler which clears the error message.
+      function serverReachableHandler(e) {
+        document.getElementById("errorDiv").innerHTML = "";
+      }
+      google.setOnLoadCallback(onLoad);
+
+    </script>
+
+<body>
+	<!-- Translate the Words-->
+	<section class="home-banner-area relative">
+	  <div class="container">
+		<div class="row fullscreen d-flex align-items-center justify-content-center">
+	     <div class="banner-content col-lg-8 col-md-12">
+			
+			<h1 class="wow fadeIn" data-wow-duration="4s">TRANSLITERATOR</h1>
+			
+			
+		 <div id='translControl'><input type="hidden" id="checkboxId" onclick="javascript:checkboxClickHandler()"></input>
+         <div>
+		 <center>Select the Language<br><select id="languageDropDown" onchange="javascript:languageChangeHandler()" align="right" width="500px" height="480px"></select>
+		 </center></div><br>
+		 Type the Select Language<textarea id="transl2" style="width:600px;height:200px"></textarea>
+		 </div>
+		<div id="errorDiv"></div>
+	  </div>
+	 </div>
+	</div>
+	</section>
+
+	<!--This is Scripts Files -->
+	<script src="js/vendor/jquery-2.2.4.min.js"></script>
+	<script src="js/vendor/bootstrap.min.js"></script>
+	<script src="js/easing.min.js"></script>
+	<script src="js/hoverIntent.js"></script>
+	<script src="js/superfish.min.js"></script>
+	<script src="js/jquery.ajaxchimp.min.js"></script>
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/owl-carousel-thumb.min.js"></script>
+	<script src="js/jquery.sticky.js"></script>
+	<script src="js/jquery.nice-select.min.js"></script>
+	<script src="js/parallax.min.js"></script>
+	<script src="js/waypoints.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/jquery.counterup.min.js"></script>
+	<script src="js/mail-script.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
